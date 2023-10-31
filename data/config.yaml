@@ -24,7 +24,7 @@ dataset:
   max_prompts: 3
   prompt_duration: 6.0
 
-  sample_type: speaker
+  sample_type: path
 
   tasks_list: [ "tts" ] # , [ "tts", "tts-c", "ns", "sr", "tse", "cse", "nse", "tts"]
 
@@ -43,7 +43,7 @@ models:
     version: 3
 
 hyperparameters:
-  batch_size: 1
+  batch_size: 4
   gradient_accumulation_steps: 32
   gradient_clipping: 100
   
@@ -71,7 +71,7 @@ hyperparameters:
   #  decay_mom_rate: 0.0
 
 evaluation:
-  batch_size: 1
+  batch_size: 4
   frequency: 250
   size: 16
   
@@ -81,7 +81,7 @@ evaluation:
   load_disabled_engines: True
 
 trainer:
-  iterations: 10 #1_000_000
+  iterations: 1_000_000
   
   save_tag: step
   save_on_oom: True
@@ -94,10 +94,10 @@ trainer:
   aggressive_optimizations: False
   load_disabled_engines: False
 
-  #load_state_dict: True
-  #strict_loading: False
+  load_state_dict: True
+  strict_loading: False
   #load_tag: "9500"
-  #load_states: False
+  load_states: False
   #restart_step_count: True
   
   gc_mode: None # "global_step"
@@ -105,7 +105,7 @@ trainer:
   weight_dtype: float16
   amp: False
 
-  backend: deepspeed
+  backend: local
   deepspeed:
     zero_optimization_level: 0
     use_compression_training: True

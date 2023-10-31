@@ -91,6 +91,7 @@ def load_engines():
 				state = state["module"]
 
 			model.load_state_dict(state, strict=cfg.trainer.strict_loading)
+			print(f"Loaded checkpoint from {load_path}")
 
 		# deepspeed inferencing
 		if backend == "local" and inferencing and deepspeed_available and cfg.trainer.deepspeed.inferencing: #and sys.platform.startswith("win"):

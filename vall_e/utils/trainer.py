@@ -154,6 +154,7 @@ def train(
 	# Training loop
 	for batch in _make_infinite_epochs(train_dl):
 		if engines.global_step >= cfg.trainer.iterations:
+			print(f"Global step {engines.global_step} > iterations {cfg.trainer.iterations}")
 			break
 
 		#batch = to_device(batch, torch.cuda.current_device())

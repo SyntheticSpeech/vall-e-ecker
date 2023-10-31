@@ -237,8 +237,8 @@ class Base(nn.Module):
 		if self.version >= 3:
 			#self.langs_emb = Embedding(self.n_langs, d_model) if self.n_langs > 0 else None
 			#self.tasks_emb = Embedding(self.n_tasks, d_model) if self.n_tasks > 0 else None
-			self.langs_emb = Embedding(1, d_model)
-			self.tasks_emb = Embedding(1, d_model)
+			self.langs_emb = Embedding(2, d_model)
+			self.tasks_emb = Embedding(8, d_model)
 
 		self.sep = nn.Parameter(torch.randn(d_model))
 
@@ -352,7 +352,7 @@ class Base(nn.Module):
 
 		# Remove padding
 		logits = [ hi[:li] for hi, li in zip(x, map(len, x_list)) ]
-
+		print(f"logits after padding {logits}")
 		# compute loss if the target is given
 		if targ_list is not None:
 			
@@ -406,6 +406,8 @@ class Base(nn.Module):
 
 		mirostat: list[dict] | None = None,
 	):
+		print("Sample logits")
+		for logit in logits: print(logit)
 		if min_temperature < 0:
 			min_temperature = temperature
 		# (NAR) return the entire generated response

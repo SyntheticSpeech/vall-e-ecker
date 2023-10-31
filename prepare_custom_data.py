@@ -5,7 +5,7 @@ import csv
 def m4a_to_wav():
     # Ensure the output folder exists, or create it if it doesn't
     src_folder = '/Users/apple/Desktop/coquiTTS/fine-tune_dataset/new_m4as'
-    dst_folder = '/Users/apple/Desktop/Practicum/self-collect-dataset-3/'
+    dst_folder = '/Users/apple/Desktop/Practicum/self-collect-dataset-4/'
     os.makedirs(dst_folder, exist_ok=True)
     # Loop through all files in the input folder
     for filename in os.listdir(src_folder):
@@ -24,7 +24,7 @@ def m4a_to_wav():
 def create_txt_transcriptions():
     # Open the input text file with transcriptions
     input_file = "/Users/apple/Desktop/coquiTTS/fine-tune_dataset/new_m4as/new_train.txt"
-    dest_folder = '/Users/apple/Desktop/Practicum/self-collect-dataset-3/'
+    dest_folder = '/Users/apple/Desktop/Practicum/self-collect-dataset-4/'
     os.makedirs(dest_folder, exist_ok=True)
     # Open the file for reading
     with open(input_file, "r", encoding="utf-8") as file:
@@ -33,7 +33,7 @@ def create_txt_transcriptions():
             line = line.split('|')[2]
             line = line[:len(line)-1]
             # Clean and create a filename for the new text file
-            filename = f"{dest_folder}/{line_number}.txt"
+            filename = f"{dest_folder}/{line_number}.normalized.txt"
             with open(filename, "w", encoding="utf-8") as output_file:
                 output_file.write(line)
             # filename = f"{dest_folder}/{line_number}.normalized.txt"

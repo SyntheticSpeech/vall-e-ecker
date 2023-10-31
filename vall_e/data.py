@@ -67,16 +67,16 @@ def _get_phone_path(path):
 
 _total_durations = {}
 
-# @cfg.diskcache()
+@cfg.diskcache()
 def _calculate_durations( type="training" ):
 	if type in _total_durations:
 		return _total_durations[type]
 	return 0
 
-# @cfg.diskcache()
+@cfg.diskcache()
 def _load_paths(dataset, type="training"):
 	out_dict = { cfg.get_spkr( data_dir / "dummy" ): _load_paths_from_metadata( data_dir, type=type, validate=cfg.dataset.validate and type == "training" ) for data_dir in tqdm(dataset, desc=f"Parsing dataset: {type}") }
-	print(f"out_dict of load _paths {out_dict}")
+	# print(f"out_dict of load _paths {out_dict}")
 	return out_dict
 
 def _load_paths_from_metadata(data_dir, type="training", validate=False):
@@ -199,7 +199,7 @@ class Dataset(_Dataset):
 		
 		# dict of paths keyed by speaker names
 		self.paths_by_spkr_name = _load_paths(self.dataset, self.dataset_type)
-		print(self.paths_by_spkr_name)
+		# print(self.paths_by_spkr_name)
 		# cull speakers if they do not have enough utterances
 		if cfg.dataset.min_utterances > 0:
 			keys = list(self.paths_by_spkr_name.keys())
@@ -208,7 +208,7 @@ class Dataset(_Dataset):
 					del self.paths_by_spkr_name[key]
 
 		self.paths = list(itertools.chain.from_iterable(self.paths_by_spkr_name.values()))
-		print(self.paths)
+		# print(self.paths)
 		self.samplers = { name: Sampler( paths, keep_all=True ) for name, paths in self.paths_by_spkr_name.items() }
 		
 		# dict of speakers keyed by speaker group
@@ -224,6 +224,7 @@ class Dataset(_Dataset):
 				self.spkrs_by_spkr_group[spkr_group] = []
 
 			self.spkrs_by_spkr_group[spkr_group].append( spkr )
+			print(f"append {spkr} to group {spkr_group}")
 
 		self.spkr_groups = list(self.spkrs_by_spkr_group.keys())
 
@@ -246,7 +247,7 @@ class Dataset(_Dataset):
 
 		if len(self.paths) == 0:
 			raise ValueError(f"No valid path is found for {self.dataset_type}")
-		print(f"daset init: {len(self.paths)}, sampler type {self.sampler_type }")
+		print(f"daset init: {len(self.paths)}, sampler type {self.sampler_type }, _head {self._head}")
 		#self.duration = _total_durations[self.dataset_type] if self.dataset_type in _total_durations else 0
 		self.duration = _calculate_durations(self.dataset_type)
 

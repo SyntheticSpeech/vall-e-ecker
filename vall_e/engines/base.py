@@ -72,6 +72,7 @@ class Engine():
 			raise Exception("freeze_all=False yet self._cfg.frozen_params is None")
 
 		for name, param in self.module.named_parameters():
+			print(f"Param Name {name}")
 			if (freeze_all and param.requires_grad) or (not freeze_all and name in self._cfg.frozen_params):
 				param.requires_grad_(False)
 				self._frozen_params.add(param)
