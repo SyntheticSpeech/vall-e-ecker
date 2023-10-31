@@ -451,7 +451,7 @@ class DeepSpeed:
 
 @dataclass()
 class Trainer:
-	iterations: int = 100_000
+	iterations: int = 100 #100_000
 
 	save_tag: str = "step"
 	load_tag: str | None = None

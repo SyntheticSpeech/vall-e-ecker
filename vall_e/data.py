@@ -67,15 +67,17 @@ def _get_phone_path(path):
 
 _total_durations = {}
 
-@cfg.diskcache()
+# @cfg.diskcache()
 def _calculate_durations( type="training" ):
 	if type in _total_durations:
 		return _total_durations[type]
 	return 0
 
-@cfg.diskcache()
+# @cfg.diskcache()
 def _load_paths(dataset, type="training"):
-	return { cfg.get_spkr( data_dir / "dummy" ): _load_paths_from_metadata( data_dir, type=type, validate=cfg.dataset.validate and type == "training" ) for data_dir in tqdm(dataset, desc=f"Parsing dataset: {type}") }
+	out_dict = { cfg.get_spkr( data_dir / "dummy" ): _load_paths_from_metadata( data_dir, type=type, validate=cfg.dataset.validate and type == "training" ) for data_dir in tqdm(dataset, desc=f"Parsing dataset: {type}") }
+	print(f"out_dict of load _paths {out_dict}")
+	return out_dict
 
 def _load_paths_from_metadata(data_dir, type="training", validate=False):
 	_fn = _get_hdf5_paths if cfg.dataset.use_hdf5 else _get_paths_of_extensions
@@ -197,7 +199,7 @@ class Dataset(_Dataset):
 		
 		# dict of paths keyed by speaker names
 		self.paths_by_spkr_name = _load_paths(self.dataset, self.dataset_type)
-
+		print(self.paths_by_spkr_name)
 		# cull speakers if they do not have enough utterances
 		if cfg.dataset.min_utterances > 0:
 			keys = list(self.paths_by_spkr_name.keys())
@@ -206,7 +208,7 @@ class Dataset(_Dataset):
 					del self.paths_by_spkr_name[key]
 
 		self.paths = list(itertools.chain.from_iterable(self.paths_by_spkr_name.values()))
-
+		print(self.paths)
 		self.samplers = { name: Sampler( paths, keep_all=True ) for name, paths in self.paths_by_spkr_name.items() }
 		
 		# dict of speakers keyed by speaker group
@@ -244,7 +246,7 @@ class Dataset(_Dataset):
 
 		if len(self.paths) == 0:
 			raise ValueError(f"No valid path is found for {self.dataset_type}")
-		
+		print(f"daset init: {len(self.paths)}, sampler type {self.sampler_type }")
 		#self.duration = _total_durations[self.dataset_type] if self.dataset_type in _total_durations else 0
 		self.duration = _calculate_durations(self.dataset_type)
 
@@ -704,13 +706,13 @@ def create_datasets():
 
 def create_train_val_dataloader():
 	train_dataset, val_dataset = create_datasets()
-
 	subtrain_dataset = copy.deepcopy(train_dataset)
 	if subtrain_dataset.sampler_type == "path":
 		subtrain_dataset.head_(cfg.evaluation.size)
 
 	train_dl = _create_dataloader(train_dataset, training=True)
 	val_dl = _create_dataloader(val_dataset, training=False)
+	print(f"dp1 {len(train_dl)} {len(val_dl)}")
 	subtrain_dl = _create_dataloader(subtrain_dataset, training=False)
 
 	_logger.info(str(train_dataset.phone_symmap))

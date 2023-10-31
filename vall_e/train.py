@@ -170,7 +170,7 @@ def train():
 		from .webui import start
 		start(lock=False)
 	"""
-
+	print(f"Len train loader {len(train_dl)}")
 	trainer.train(
 		train_dl=train_dl,
 		train_feeder=train_feeder,

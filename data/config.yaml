@@ -1,14 +1,16 @@
 dataset:
   training: [
-    "/content/vall-e-ecker/data/custom/",
+    "/content/vall-e-ecker/data/custom/train",
   ]
-  validation: []
+  validation: [
+    "/content/vall-e-ecker/data/custom/test",
+  ]
   noise: []
   
-  speaker_name_getter: "lambda p: f'{p.parts[-3]}_{p.parts[-2]}'"
+  speaker_name_getter: "lambda p: 14"
   
-  use_hdf5: True
-  use_metadata: True
+  use_hdf5: False
+  use_metadata: False
   hdf5_flag: r
   validate: True
 
@@ -41,7 +43,7 @@ models:
     version: 3
 
 hyperparameters:
-  batch_size: 8
+  batch_size: 1
   gradient_accumulation_steps: 32
   gradient_clipping: 100
   
@@ -69,7 +71,7 @@ hyperparameters:
   #  decay_mom_rate: 0.0
 
 evaluation:
-  batch_size: 16
+  batch_size: 1
   frequency: 250
   size: 16
   
@@ -79,7 +81,7 @@ evaluation:
   load_disabled_engines: True
 
 trainer:
-  iterations: 1_000_000
+  iterations: 10 #1_000_000
   
   save_tag: step
   save_on_oom: True
